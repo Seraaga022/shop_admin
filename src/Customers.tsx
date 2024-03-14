@@ -7,8 +7,8 @@ import {
     TextField,
     TextInput,
     SearchInput,
-    // Pagination,
-    // ListBase,
+    Pagination,
+    ListBase,
 } from 'react-admin';
 import { Stack } from '@mui/material';
 
@@ -29,7 +29,7 @@ export const CustomersList = () => (
     <List>
         <ListToolbar />
         <Datagrid rowClick="edit">
-            <TextField source="id" />
+            <TextField source="customer_id" />
             <TextField source="name" />
             <TextField source="email" />
             <TextField source="phone" />
