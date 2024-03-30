@@ -7,37 +7,34 @@ import {
   TextField,
   TextInput,
   SearchInput,
+  ImageInput,
+  ImageField,
   // Pagination,
   // ListBase,
 } from "react-admin";
 import { Stack } from "@mui/material";
 
-const CustomerFilters = [
+const CategoryFilters = [
   <SearchInput key={""} source="name" alwaysOn />,
-  <TextInput
-    key={""}
-    label="email"
-    source="email"
-    defaultValue="your_email@gmail.com"
-  />,
+  <TextInput key={""} label="name" source="name" defaultValue="mobile" />,
 ];
 const ListToolbar = () => (
   <Stack direction="row" justifyContent="space-between">
-    <FilterForm filters={CustomerFilters} />
+    <FilterForm filters={CategoryFilters} />
     <div>
-      <FilterButton filters={CustomerFilters} />
+      <FilterButton filters={CategoryFilters} />
       <CreateButton />
     </div>
   </Stack>
 );
-export const CustomersList = () => (
+export const CategoryList = () => (
   <List>
     <ListToolbar />
     <Datagrid rowClick="edit">
       <TextField source="id" />
       <TextField source="name" />
-      <TextField source="email" />
-      <TextField source="phone" />
+      <TextField source="description" />
+      <TextField source="PCI" />
     </Datagrid>
   </List>
 );
