@@ -68,7 +68,7 @@
 
 import React from "react";
 import { Create, SimpleForm, TextInput, required } from "react-admin";
-import ImageInput from "./ImageInput"; // Adjust the import path as necessary
+import { ImageInput, ImageField } from "react-admin";
 
 const MyCategoryCreate = (props) => (
   <Create {...props}>
@@ -86,9 +86,9 @@ const MyCategoryCreate = (props) => (
         label="parent category id OR empty if its parent"
         fullWidth
       />
-      <TextInput source="title" />
-      <ImageInput source="image" />
-      {/* Add other fields as needed */}
+      <ImageInput source="image" label="image">
+        <ImageField source="src" title="title" />
+      </ImageInput>
     </SimpleForm>
   </Create>
 );
