@@ -23,7 +23,6 @@ const ListToolbar = () => (
     <FilterForm filters={CategoryFilters} />
     <div>
       <FilterButton filters={CategoryFilters} />
-      <CreateButton />
     </div>
   </Stack>
 );
