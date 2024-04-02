@@ -64,6 +64,83 @@ const createCustomerFormData = (
   return formData;
 };
 
+type ProductParams = {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  Cat: string;
+  image: {
+    rawFile: File;
+    src?: string;
+    title?: string;
+  };
+};
+
+const createProductFormData = (
+  params: CreateParams<ProductParams> | UpdateParams<ProductParams>
+) => {
+  const formData = new FormData();
+  params.data.name && formData.append("name", params.data.name);
+  params.data.description &&
+    formData.append("description", params.data.description);
+  params.data.price && formData.append("price", params.data.price);
+  params.data.Cat && formData.append("Cat", params.data.Cat);
+  params.data.image?.rawFile &&
+    formData.append("image", params.data.image.rawFile);
+
+  return formData;
+};
+
+type PaymentParams = {
+  id: string;
+  order_id: string;
+  payment_method: string;
+  amount: string;
+};
+
+const createPaymentFormData = (
+  params: CreateParams<PaymentParams> | UpdateParams<PaymentParams>
+) => {
+  const formData = new FormData();
+  params.data.id && formData.append("id", params.data.id);
+  params.data.amount && formData.append("amount", params.data.amount);
+  params.data.order_id && formData.append("order_id", params.data.order_id);
+  params.data.payment_method &&
+    formData.append("payment_method", params.data.payment_method);
+
+  return formData;
+};
+
+type AddressParams = {
+  id: string;
+  order_id: string;
+  recipient_name: string;
+  address: string;
+  state: string;
+  country: string;
+  city: string;
+  postal_code: string;
+};
+
+const createAddressFormData = (
+  params: CreateParams<AddressParams> | UpdateParams<AddressParams>
+) => {
+  const formData = new FormData();
+  params.data.id && formData.append("id", params.data.id);
+  params.data.order_id && formData.append("order_id", params.data.order_id);
+  params.data.recipient_name &&
+    formData.append("recipient_name", params.data.recipient_name);
+  params.data.address && formData.append("address", params.data.address);
+  params.data.state && formData.append("state", params.data.state);
+  params.data.country && formData.append("country", params.data.country);
+  params.data.city && formData.append("city", params.data.city);
+  params.data.postal_code &&
+    formData.append("postal_code", params.data.postal_code);
+
+  return formData;
+};
+
 export const dataProvider: DataProvider = {
   create: (resource, params) => {
     if (resource === "category") {
@@ -79,6 +156,39 @@ export const dataProvider: DataProvider = {
         });
     } else if (resource === "customer") {
       const formData = createCustomerFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}`, {
+          method: "POST",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "product") {
+      const formData = createProductFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}`, {
+          method: "POST",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "payment") {
+      const formData = createPaymentFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}`, {
+          method: "POST",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "address") {
+      const formData = createAddressFormData(params);
       return fetchUtils
         .fetchJson(`${endpoint}/${resource}`, {
           method: "POST",
@@ -115,10 +225,73 @@ export const dataProvider: DataProvider = {
         .catch((error) => {
           return Promise.reject({ message: error.message });
         });
+    } else if (resource === "product") {
+      const formData = createProductFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}/${params.id}`, {
+          method: "PUT",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "payment") {
+      const formData = createPaymentFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}/${params.id}`, {
+          method: "PUT",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "address") {
+      const formData = createAddressFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}/${params.id}`, {
+          method: "PUT",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
     } else {
       return Promise.reject({ message: "Unsupported resource type" });
     }
   },
+  // getList: (resource, params) => {
+  //   const { page, perPage } = params.pagination;
+  //   const { field, order } = params.sort;
+  //   const query = {
+  //     range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
+  //     sort: JSON.stringify([field, order]),
+  //     filter: JSON.stringify(params.filter),
+  //   };
+
+  //   // Construct the query string
+  //   const queryString = fetchUtils.queryParameters(query);
+
+  //   // Make the GET request with the query string
+  //   return fetchUtils
+  //     .fetchJson(`${endpoint}/${resource}?${queryString}`, {
+  //       method: "GET",
+  //     })
+  //     .then(({ json, headers }) => ({
+  //       const contentRange = headers.get('Content-Range');
+  //       const totalCount = contentRange ? parseInt(contentRange.split('/')[1], 10) : 0;
+
+  //       return {
+  //         data: json.data,
+  //         total: json.totalCount
+  //       }
+  //     }))
+  //     .catch((error) => {
+  //       return Promise.reject({ message: error.message });
+  //     });
+  // },
   getList: (resource, params) => {
     const { page, perPage } = params.pagination;
     const { field, order } = params.sort;
@@ -136,10 +309,18 @@ export const dataProvider: DataProvider = {
       .fetchJson(`${endpoint}/${resource}?${queryString}`, {
         method: "GET",
       })
-      .then(({ json }) => ({
-        data: json.data,
-        total: json.total, // Assuming the backend returns the total count in the response
-      }))
+      .then(({ json, headers }) => {
+        // Extract the total count from the Content-Range header
+        const contentRange = headers.get("Content-Range");
+        const totalCount = contentRange
+          ? parseInt(contentRange.split("/")[1], 10)
+          : 0;
+
+        return {
+          data: json.data,
+          total: totalCount, // Return the total count
+        };
+      })
       .catch((error) => {
         return Promise.reject({ message: error.message });
       });
