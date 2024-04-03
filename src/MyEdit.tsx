@@ -109,3 +109,14 @@ export const UserEdit = (props) => {
     </Edit>
   );
 };
+
+export const FeedbackEdit = (props) => {
+  return (
+    <Edit {...props}>
+      <SimpleForm>
+        <TextInput /* multiline */ fullWidth disabled source="comment" />
+        <TextInput source="ans" />
+      </SimpleForm>
+    </Edit>
+  );
+};

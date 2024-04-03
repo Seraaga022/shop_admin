@@ -203,6 +203,26 @@ const createUserFormData = (
   return formData;
 };
 
+type FeedbackParams = {
+  id: string;
+  // customer_id: string;
+  // order_id: string;
+  // rating: string;
+  // comment: string;
+  // feedback_date: string;
+  ans: string;
+};
+
+const createFeedbackFormData = (
+  params: CreateParams<FeedbackParams> | UpdateParams<FeedbackParams>
+) => {
+  const formData = new FormData();
+  params.data.id && formData.append("id", params.data.id);
+  params.data.ans && formData.append("ans", params.data.ans);
+
+  return formData;
+};
+
 export const dataProvider: DataProvider = {
   create: (resource, params) => {
     if (resource === "category") {
@@ -377,6 +397,17 @@ export const dataProvider: DataProvider = {
         });
     } else if (resource === "order") {
       const formData = createOrderFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}/${params.id}`, {
+          method: "PUT",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "feedback") {
+      const formData = createFeedbackFormData(params);
       return fetchUtils
         .fetchJson(`${endpoint}/${resource}/${params.id}`, {
           method: "PUT",

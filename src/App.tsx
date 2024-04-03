@@ -40,6 +40,10 @@ import { OrderList } from './Order'
 import MyOrderCreate from './OrderCreate'
 import { OrderEdit } from './MyEdit'
  
+import { FeedbackList } from './Feedback'
+// import MyFeedbackCreate from './FeedbackCreate'
+import { FeedbackEdit } from "./MyEdit";
+
 export const App = () => (
   <Admin
     theme={lightTheme}
@@ -95,6 +99,13 @@ export const App = () => (
       edit={OrderEdit}
       show={ShowGuesser}
       create={MyOrderCreate}
+    />
+    <Resource
+      name="feedback"
+      list={FeedbackList}
+      edit={FeedbackEdit}
+      show={ShowGuesser}
+      // create={MyFeedbackCreate}
     />
   </Admin>
 );
