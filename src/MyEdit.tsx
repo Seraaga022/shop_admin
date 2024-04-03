@@ -70,3 +70,42 @@ export const AddressEdit = (props) => {
     </Edit>
   );
 };
+
+export const AdminLogEdit = (props) => {
+  return (
+    <Edit {...props}>
+      <SimpleForm>
+        <TextInput disabled source="id" />
+        <TextInput source="user_id" />
+        <TextInput source="action" />
+        <TextInput source="ip_address" />
+      </SimpleForm>
+    </Edit>
+  );
+};
+
+export const OrderEdit = (props) => {
+  return (
+    <Edit {...props}>
+      <SimpleForm>
+        <TextInput disabled source="id" />
+        <TextInput source="customer_id" />
+        <TextInput source="total_amount" />
+        <TextInput source="status" />
+      </SimpleForm>
+    </Edit>
+  );
+};
+
+export const UserEdit = (props) => {
+  return (
+    <Edit {...props}>
+      <SimpleForm>
+        <TextInput disabled source="id" />
+        <TextInput source="username" />
+        <TextInput source="password_hash" />
+        <TextInput source="email" />
+      </SimpleForm>
+    </Edit>
+  );
+};

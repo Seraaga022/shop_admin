@@ -141,6 +141,68 @@ const createAddressFormData = (
   return formData;
 };
 
+type AdminLogParams = {
+  id: string;
+  user_name: string;
+  user_id: string;
+  action: string;
+  ip_address: string;
+  action_date: string;
+};
+
+const createAdminLogFormData = (
+  params: CreateParams<AdminLogParams> | UpdateParams<AdminLogParams>
+) => {
+  const formData = new FormData();
+  params.data.id && formData.append("id", params.data.id);
+  params.data.user_id && formData.append("user_id", params.data.user_id);
+  params.data.action && formData.append("action", params.data.action);
+  params.data.ip_address &&
+    formData.append("ip_address", params.data.ip_address);
+
+  return formData;
+};
+
+type OrderParams = {
+  id: string;
+  customer_id: string;
+  total_amount: string;
+  status: string;
+};
+
+const createOrderFormData = (
+  params: CreateParams<OrderParams> | UpdateParams<OrderParams>
+) => {
+  const formData = new FormData();
+  params.data.id && formData.append("id", params.data.id);
+  params.data.customer_id &&
+    formData.append("customer_id", params.data.customer_id);
+  params.data.total_amount &&
+    formData.append("total_amount", params.data.total_amount);
+  params.data.status && formData.append("status", params.data.status);
+
+  return formData;
+};
+
+type UserParams = {
+  id: string;
+  username: string;
+  password_hash: string;
+  email: string;
+};
+
+const createUserFormData = (
+  params: CreateParams<UserParams> | UpdateParams<UserParams>
+) => {
+  const formData = new FormData();
+  params.data.username && formData.append("username", params.data.username);
+  params.data.email && formData.append("email", params.data.email);
+  params.data.password_hash &&
+    formData.append("password_hash", params.data.password_hash);
+
+  return formData;
+};
+
 export const dataProvider: DataProvider = {
   create: (resource, params) => {
     if (resource === "category") {
@@ -189,6 +251,39 @@ export const dataProvider: DataProvider = {
         });
     } else if (resource === "address") {
       const formData = createAddressFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}`, {
+          method: "POST",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "adminLog") {
+      const formData = createAdminLogFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}`, {
+          method: "POST",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "order") {
+      const formData = createOrderFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}`, {
+          method: "POST",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "user") {
+      const formData = createUserFormData(params);
       return fetchUtils
         .fetchJson(`${endpoint}/${resource}`, {
           method: "POST",
@@ -258,40 +353,43 @@ export const dataProvider: DataProvider = {
         .catch((error) => {
           return Promise.reject({ message: error.message });
         });
+    } else if (resource === "adminLog") {
+      const formData = createAdminLogFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}/${params.id}`, {
+          method: "PUT",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "user") {
+      const formData = createUserFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}/${params.id}`, {
+          method: "PUT",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "order") {
+      const formData = createOrderFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}/${params.id}`, {
+          method: "PUT",
+          body: formData,
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
     } else {
       return Promise.reject({ message: "Unsupported resource type" });
     }
   },
-  // getList: (resource, params) => {
-  //   const { page, perPage } = params.pagination;
-  //   const { field, order } = params.sort;
-  //   const query = {
-  //     range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
-  //     sort: JSON.stringify([field, order]),
-  //     filter: JSON.stringify(params.filter),
-  //   };
-
-  //   // Construct the query string
-  //   const queryString = fetchUtils.queryParameters(query);
-
-  //   // Make the GET request with the query string
-  //   return fetchUtils
-  //     .fetchJson(`${endpoint}/${resource}?${queryString}`, {
-  //       method: "GET",
-  //     })
-  //     .then(({ json, headers }) => ({
-  //       const contentRange = headers.get('Content-Range');
-  //       const totalCount = contentRange ? parseInt(contentRange.split('/')[1], 10) : 0;
-
-  //       return {
-  //         data: json.data,
-  //         total: json.totalCount
-  //       }
-  //     }))
-  //     .catch((error) => {
-  //       return Promise.reject({ message: error.message });
-  //     });
-  // },
   getList: (resource, params) => {
     const { page, perPage } = params.pagination;
     const { field, order } = params.sort;
@@ -304,7 +402,6 @@ export const dataProvider: DataProvider = {
     // Construct the query string
     const queryString = fetchUtils.queryParameters(query);
 
-    // Make the GET request with the query string
     return fetchUtils
       .fetchJson(`${endpoint}/${resource}?${queryString}`, {
         method: "GET",

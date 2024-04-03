@@ -32,6 +32,14 @@ import { AddressList } from "./Address";
 import MyAddressCreate from "./AddressCreate";
 import { AddressEdit } from "./MyEdit";
 
+import { AdminLogList } from './AdminLog'
+import MyAdminLogCreate from './AdminLogCreate'
+import { AdminLogEdit } from "./MyEdit";
+
+import { OrderList } from './Order'
+import MyOrderCreate from './OrderCreate'
+import { OrderEdit } from './MyEdit'
+ 
 export const App = () => (
   <Admin
     theme={lightTheme}
@@ -73,6 +81,20 @@ export const App = () => (
       edit={AddressEdit}
       show={ShowGuesser}
       create={MyAddressCreate}
+    />
+    <Resource
+      name="adminLog"
+      list={AdminLogList}
+      edit={AdminLogEdit}
+      show={ShowGuesser}
+      create={MyAdminLogCreate}
+    />
+    <Resource
+      name="order"
+      list={OrderList}
+      edit={OrderEdit}
+      show={ShowGuesser}
+      create={MyOrderCreate}
     />
   </Admin>
 );
