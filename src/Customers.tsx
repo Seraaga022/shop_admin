@@ -1,5 +1,4 @@
 import {
-  CreateButton,
   Datagrid,
   FilterButton,
   FilterForm,
@@ -13,12 +12,12 @@ import {
 import { Stack } from "@mui/material";
 
 const CustomerFilters = [
-  <SearchInput key={""} source="name" alwaysOn />,
+  <SearchInput placeholder="name" key={""} source="name" alwaysOn />,
   <TextInput
     key={""}
     label="email"
     source="email"
-    defaultValue="your_email@gmail.com"
+    defaultValue="@example.com"
   />,
 ];
 const ListToolbar = () => (
@@ -26,7 +25,6 @@ const ListToolbar = () => (
     <FilterForm filters={CustomerFilters} />
     <div>
       <FilterButton filters={CustomerFilters} />
-      {/* <CreateButton /> */}
     </div>
   </Stack>
 );

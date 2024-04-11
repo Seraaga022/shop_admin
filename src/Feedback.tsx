@@ -10,12 +10,12 @@ import {
 import { Stack } from "@mui/material";
 
 const FeedbackFilters = [
-  <SearchInput key={""} source="id" alwaysOn />,
+  <SearchInput key={""} placeholder='order id' source="order_id" alwaysOn />,
   <TextInput
     key={""}
     label="Customer name"
     source="customer_name"
-    defaultValue="john"
+    defaultValue="nelson"
   />,
   <TextInput key={""} label="Rating" source="rating" defaultValue="5" />,
 ];
@@ -37,7 +37,6 @@ export const FeedbackList = () => (
       <TextField source="rating" />
       <TextField source="comment" />
       <TextField source="feedback_date" />
-      {/* <TextField source="ans" /> */}
     </Datagrid>
   </List>
 );

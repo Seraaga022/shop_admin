@@ -11,8 +11,8 @@ export const CustomerCreate = () => (
   <Create>
     <SimpleForm>
       <TextInput source="name" validate={[required()]} fullWidth />
-      <TextInput source="phone" multiline={true} label="phone" />
-      <TextInput source="email" multiline={true} label="email" />
+      <TextInput source="phone" validate={[required()]} multiline={true} label="phone" />
+      <TextInput source="email" validate={[required()]} multiline={true} label="email" />
       <ImageInput source="image" label="image">
         <ImageField source="src" title="title" />
       </ImageInput>

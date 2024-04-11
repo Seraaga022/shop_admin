@@ -10,7 +10,7 @@ import {
 import { Stack } from "@mui/material";
 
 const OrderFilters = [
-  <SearchInput key={""} source="status" alwaysOn />,
+  <SearchInput key={""} placeholder="id" source="customer_id" alwaysOn />,
   <TextInput key={""} label="Status" source="status" defaultValue="pending" />,
 ];
 const ListToolbar = () => (
@@ -27,9 +27,10 @@ export const OrderList = () => (
     <Datagrid rowClick="edit">
       <TextField source="id" />
       <TextField source="customer_id" />
-      <TextField source="order_date" />
       <TextField source="total_amount" />
+      <TextField source="quantity" label='Total quantity' />
       <TextField source="status" />
+      <TextField source="order_date" />
     </Datagrid>
   </List>
 );

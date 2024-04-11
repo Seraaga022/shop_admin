@@ -1,0 +1,98 @@
+.Login-form-label {
+  width: 100svw;
+  height: 100svh;
+  background-image: url("src/assets/login-background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & form {
+    width: 330px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* justify-content: center; */
+    gap: 20px;
+    background-color: #58a399;
+    padding: 10px;
+    border-radius: 30px;
+    filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.5));
+
+    & .title {
+      border-radius: 20px 20px 6px 6px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+      font-size: 30px;
+      height: 30%;
+      font-variant: 600;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #6cc9bc;
+      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+    }
+
+    & input {
+      height: 60px;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      background-color: #e8f0fe;
+      padding: 10px;
+      font-size: 18px;
+
+      &::placeholder {
+        font-size: 15px;
+      }
+    }
+
+    /* & .input-2 {
+
+    } */
+
+    & button {
+      font-size: 20px;
+      height: 35px;
+      height: 45px;
+      position: relative;
+      bottom: 0px;
+      transition: all ease-out 100ms;
+      border: none;
+      outline: none;
+      border-radius: 6px 6px 20px 20px;
+      margin-top: auto;
+
+      &:hover {
+        background-color: pink;
+        font-size: 16px;
+      }
+      &:active {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+.link-go-to-home {
+  position: absolute;
+  top: 0;
+  background-color: darkseagreen;
+  padding: 10px;
+  margin: 4px 0 0 0;
+  border-radius: 10px;
+  text-decoration: none;
+  color: white;
+  font-variant: 500;
+  font-size: 20px;
+
+  & > i {
+    font-weight: bolder;
+  }
+}

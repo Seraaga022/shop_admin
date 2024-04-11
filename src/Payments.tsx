@@ -15,8 +15,8 @@ import {
 import { Stack } from "@mui/material";
 
 const PaymentFilters = [
-  <SearchInput key={""} source="order_id" alwaysOn />,
-  <TextInput key={""} label="order id" source="order_id" defaultValue="1" />,
+  <SearchInput key={""} source="order_id" placeholder="order id" alwaysOn />,
+  // <TextInput key={""} label="order id" source="order_id" defaultValue="1" />,
   <TextInput
     key={""}
     label="payment method"

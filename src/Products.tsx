@@ -15,8 +15,7 @@ import {
 import { Stack } from "@mui/material";
 
 const ProductFilters = [
-  <SearchInput key={""} source="name" alwaysOn />,
-  <TextInput key={""} label="name" source="name" defaultValue="mobile3" />,
+  <SearchInput key={""} source="name" placeholder='product name' alwaysOn />,
 ];
 const ListToolbar = () => (
   <Stack direction="row" justifyContent="space-between">

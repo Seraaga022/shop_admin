@@ -1,14 +1,12 @@
-// import simpleRestProvider from "ra-data-simple-rest";
-// export const dataProvider = simpleRestProvider(
-//   import.meta.env.VITE_SIMPLE_REST_URL
-// );
-
+// import { MaxLength } from "buffer";
 import {
   CreateParams,
   UpdateParams,
   DataProvider,
   fetchUtils,
 } from "react-admin";
+import React, { useContext } from "react";
+import { AuthContext, AuthContextType } from "./AuthContext";
 
 const endpoint = import.meta.env.VITE_SIMPLE_REST_URL;
 
@@ -187,29 +185,34 @@ const createOrderFormData = (
 type UserParams = {
   id: string;
   username: string;
+  name: string;
   password_hash: string;
   email: string;
+  image: {
+    rawFile: File;
+    src?: string;
+    title?: string;
+  };
 };
 
 const createUserFormData = (
   params: CreateParams<UserParams> | UpdateParams<UserParams>
 ) => {
   const formData = new FormData();
+  params.data.name && formData.append("name", params.data.name);
   params.data.username && formData.append("username", params.data.username);
   params.data.email && formData.append("email", params.data.email);
   params.data.password_hash &&
     formData.append("password_hash", params.data.password_hash);
+  params.data.image?.rawFile &&
+    formData.append("image", params.data.image.rawFile);
 
   return formData;
 };
 
 type FeedbackParams = {
   id: string;
-  // customer_id: string;
-  // order_id: string;
-  // rating: string;
-  // comment: string;
-  // feedback_date: string;
+  admin_name: string;
   ans: string;
 };
 
@@ -223,14 +226,41 @@ const createFeedbackFormData = (
   return formData;
 };
 
-export const dataProvider: DataProvider = {
+type OrderDetailsParams = {
+  id: string;
+  order_id: string;
+  product_id: string;
+  quantity: string;
+  price: string;
+};
+
+const createOrderDetailsFormData = (
+  params: CreateParams<OrderDetailsParams> | UpdateParams<OrderDetailsParams>
+) => {
+  const formData = new FormData();
+  params.data.id && formData.append("id", params.data.id);
+  params.data.order_id && formData.append("order_id", params.data.order_id);
+  params.data.product_id &&
+    formData.append("product_id", params.data.product_id);
+  params.data.quantity && formData.append("quantity", params.data.quantity);
+  params.data.price && formData.append("price", params.data.price);
+
+  return formData;
+};
+
+const CreateDataProvider = (authContext: AuthContextType): DataProvider => ({
   create: (resource, params) => {
+    const { Admin } = authContext;
     if (resource === "category") {
       const formData = createCategoryFormData(params);
       return fetchUtils
         .fetchJson(`${endpoint}/${resource}`, {
           method: "POST",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -242,6 +272,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}`, {
           method: "POST",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -253,6 +287,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}`, {
           method: "POST",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -264,6 +302,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}`, {
           method: "POST",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -275,6 +317,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}`, {
           method: "POST",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -286,6 +332,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}`, {
           method: "POST",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -297,6 +347,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}`, {
           method: "POST",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -308,6 +362,25 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}`, {
           method: "POST",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "orderDetail") {
+      const formData = createOrderDetailsFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}`, {
+          method: "POST",
+          body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -318,12 +391,17 @@ export const dataProvider: DataProvider = {
     }
   },
   update: (resource, params) => {
+    const { Admin } = authContext;
     if (resource === "category") {
       const formData = createCategoryFormData(params);
       return fetchUtils
         .fetchJson(`${endpoint}/${resource}/${params.id}`, {
           method: "PUT",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -335,6 +413,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}/${params.id}`, {
           method: "PUT",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -346,6 +428,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}/${params.id}`, {
           method: "PUT",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -357,6 +443,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}/${params.id}`, {
           method: "PUT",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -368,6 +458,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}/${params.id}`, {
           method: "PUT",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -379,6 +473,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}/${params.id}`, {
           method: "PUT",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -390,6 +488,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}/${params.id}`, {
           method: "PUT",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -401,6 +503,10 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}/${params.id}`, {
           method: "PUT",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -412,6 +518,25 @@ export const dataProvider: DataProvider = {
         .fetchJson(`${endpoint}/${resource}/${params.id}`, {
           method: "PUT",
           body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
+        })
+        .then(({ json }) => ({ data: json }))
+        .catch((error) => {
+          return Promise.reject({ message: error.message });
+        });
+    } else if (resource === "orderDetail") {
+      const formData = createOrderDetailsFormData(params);
+      return fetchUtils
+        .fetchJson(`${endpoint}/${resource}/${params.id}`, {
+          method: "PUT",
+          body: formData,
+          headers: new Headers({
+            "X-Admin-Name": Admin.name,
+            "X-Admin-Id": Admin.id,
+          }),
         })
         .then(({ json }) => ({ data: json }))
         .catch((error) => {
@@ -422,6 +547,7 @@ export const dataProvider: DataProvider = {
     }
   },
   getList: (resource, params) => {
+    const { Admin } = authContext;
     const { page, perPage } = params.pagination;
     const { field, order } = params.sort;
     const query = {
@@ -436,6 +562,10 @@ export const dataProvider: DataProvider = {
     return fetchUtils
       .fetchJson(`${endpoint}/${resource}?${queryString}`, {
         method: "GET",
+        headers: new Headers({
+          "X-Admin-Name": Admin.name,
+          "X-Admin-Id": Admin.id,
+        }),
       })
       .then(({ json, headers }) => {
         // Extract the total count from the Content-Range header
@@ -454,9 +584,14 @@ export const dataProvider: DataProvider = {
       });
   },
   getOne: (resource, params) => {
+    const { Admin } = authContext;
     return fetchUtils
       .fetchJson(`${endpoint}/${resource}/${params.id}`, {
         method: "GET",
+        headers: new Headers({
+          "X-Admin-Name": Admin.name,
+          "X-Admin-Id": Admin.id,
+        }),
       })
       .then(({ json }) => ({ data: json }))
       .catch((error) => {
@@ -464,10 +599,15 @@ export const dataProvider: DataProvider = {
       });
   },
   getMany: (resource, params) => {
+    const { Admin } = authContext;
     const query = params.ids.map((id) => `id=${id}`).join("&");
     return fetchUtils
       .fetchJson(`${endpoint}/${resource}?${query}`, {
         method: "GET",
+        headers: new Headers({
+          "X-Admin-Name": Admin.name,
+          "X-Admin-Id": Admin.id,
+        }),
       })
       .then(({ json }) => ({ data: json }))
       .catch((error) => {
@@ -475,10 +615,15 @@ export const dataProvider: DataProvider = {
       });
   },
   getManyReference: (resource, params) => {
+    const { Admin } = authContext;
     const query = `reference=${params.target}&referenceId=${params.id}`;
     return fetchUtils
       .fetchJson(`${endpoint}/${resource}?${query}`, {
         method: "GET",
+        headers: new Headers({
+          "X-Admin-Name": Admin.name,
+          "X-Admin-Id": Admin.id,
+        }),
       })
       .then(({ json }) => ({ data: json.data, total: json.total }))
       .catch((error) => {
@@ -486,11 +631,14 @@ export const dataProvider: DataProvider = {
       });
   },
   updateMany: (resource, params) => {
+    const { Admin } = authContext;
     const promises = params.ids.map((id) =>
       fetchUtils.fetchJson(`${endpoint}/${resource}/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "X-Admin-Name": Admin.name,
+          "X-Admin-Id": Admin.id,
         },
         body: JSON.stringify(params.data),
       })
@@ -502,9 +650,14 @@ export const dataProvider: DataProvider = {
       });
   },
   delete: (resource, params) => {
+    const { Admin } = authContext;
     return fetchUtils
       .fetchJson(`${endpoint}/${resource}/${params.id}`, {
         method: "DELETE",
+        headers: new Headers({
+          "X-Admin-Name": Admin.name,
+          "X-Admin-Id": Admin.id,
+        }),
       })
       .then(({ json }) => ({ data: json })) // Assuming json contains the deleted record
       .catch((error) => {
@@ -512,10 +665,14 @@ export const dataProvider: DataProvider = {
       });
   },
   deleteMany: (resource, params) => {
-    // Similar to updateMany, this might need to be implemented manually
+    const { Admin } = authContext;
     const promises = params.ids.map((id) =>
       fetchUtils.fetchJson(`${endpoint}/${resource}/${id}`, {
         method: "DELETE",
+        headers: new Headers({
+          "X-Admin-Name": Admin.name,
+          "X-Admin-Id": Admin.id,
+        }),
       })
     );
     return Promise.all(promises)
@@ -524,4 +681,6 @@ export const dataProvider: DataProvider = {
         return Promise.reject({ message: error.message });
       });
   },
-};
+});
+
+export default CreateDataProvider;

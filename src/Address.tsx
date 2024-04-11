@@ -4,14 +4,13 @@ import {
   FilterForm,
   List,
   TextField,
-  TextInput,
+  // TextInput,
   SearchInput,
 } from "react-admin";
 import { Stack } from "@mui/material";
 
 const AddressFilters = [
-  <SearchInput key={""} source="order_id" alwaysOn />,
-  <TextInput key={""} label="order id" source="order_id" defaultValue="1" />,
+  <SearchInput key={""} source="order_id" placeholder="order id" alwaysOn />,
 ];
 const ListToolbar = () => (
   <Stack direction="row" justifyContent="space-between">

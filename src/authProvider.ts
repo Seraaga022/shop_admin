@@ -1,44 +1,67 @@
-import { AuthProvider, HttpError } from "react-admin";
-import data from "./users.json";
+// import { AuthContext, AuthContextType } from "./AuthContext";
+const API_BASE_URL = import.meta.env.VITE_SIMPLE_REST_URL;
 
-/**
- * This authProvider is only for test purposes. Don't use it in production.
- */
-export const authProvider: AuthProvider = {
-  login: ({ username, password }) => {
-    const user = data.users.find(
-      (u) => u.username === username && u.password === password
-    );
+interface LoginParams {
+  username: string;
+  password: string;
+}
 
-    if (user) {
-      // eslint-disable-next-line no-unused-vars
-      let { password, ...userToPersist } = user;
-      localStorage.setItem("user", JSON.stringify(userToPersist));
-      return Promise.resolve();
-    }
+export default {
+  login: async ({ username, password }: LoginParams) => {
+    // const formData = new FormData();
+    // formData.append("username", username);
+    // formData.append("password", password);
 
-    return Promise.reject(
-      new HttpError("Unauthorized", 401, {
-        message: "Invalid username or password",
+    const request = new Request(`${API_BASE_URL}/adminLogin`, {
+      method: "POST",
+      // body: JSON.stringify(formData),
+      body: JSON.stringify({ "username": username, "password": password}),
+      // headers: new Headers({ "Content-Type": "multipart/form-data" }),
+      headers: new Headers({ "Content-Type": "application/json" }),
+    });
+
+    return fetch(request)
+      .then((response) => {
+        if (response.status < 200 || response.status >= 300) {
+          throw new Error(response.statusText);
+        }
+        return response.json();
       })
-    );
+      .then(({ message, id, username, password_hash, image, name }) => {
+        if (message === "@$admin exist@*") {
+          return Promise.resolve({
+            id: id,
+            username: username,
+            password: password_hash,
+            avatar: image,
+            name: name,
+          });
+        } else {
+          return Promise.reject();
+        }
+      });
   },
   logout: () => {
-    localStorage.removeItem("user");
+    localStorage.setItem("isAuthenticated", "false");
+    localStorage.setItem(
+      "Admin",
+      JSON.stringify({
+        id: "",
+        username: "",
+        password: "",
+        name: "",
+        avatar: "",
+      })
+    );
     return Promise.resolve();
   },
-  checkError: () => Promise.resolve(),
-  checkAuth: () =>
-    localStorage.getItem("user") ? Promise.resolve() : Promise.reject(),
-  getPermissions: () => {
-    return Promise.resolve(undefined);
+  checkError: (error: Error) => {
+    console.log(error.message);
+    return Promise.resolve();
   },
-  getIdentity: () => {
-    const persistedUser = localStorage.getItem("user");
-    const user = persistedUser ? JSON.parse(persistedUser) : null;
-
-    return Promise.resolve(user);
+  checkAuth: () => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    return isAuthenticated ? Promise.resolve() : Promise.reject();
   },
+  getPermissions: () => Promise.resolve(),
 };
-
-export default authProvider;
