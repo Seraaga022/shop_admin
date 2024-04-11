@@ -29,7 +29,7 @@ const LoginPage = () => {
       {buttonVisible && (
         <a
           className="link-go-to-home"
-          href="https://seraaga022.github.io/"
+          href="https://seraaga022.github.io/shop_admin.github.io/"
           title="go to home"
         >
           go to home <i className="fa-sharp fa-light fa-square-right"></i>
