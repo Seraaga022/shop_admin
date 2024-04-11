@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { AuthContext, AuthContextType } from "./AuthContext";
+import { AuthContext } from "./AuthContext";
 import authProvider from "./authProvider";
 
 const LoginPage = () => {
@@ -27,7 +27,11 @@ const LoginPage = () => {
   return (
     <div className="Login-form-label">
       {buttonVisible && (
-        <a className="link-go-to-home" href="/" title="go to home">
+        <a
+          className="link-go-to-home"
+          href="https://seraaga022.github.io/"
+          title="go to home"
+        >
           go to home <i className="fa-sharp fa-light fa-square-right"></i>
         </a>
       )}

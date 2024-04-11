@@ -1,0 +1,8 @@
+ npm install --save-dev gh-pages --force 
+
+ npm run deploy
+
+ with these in pacage.json:
+ *in vite projects*
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
